@@ -13,13 +13,13 @@ public class ErrorUtil {
                 .getAttribute(key);
         String error ;
         if (exception instanceof BadCredentialsException) {
-            error = "无效的用户名或者密码!";
+            error = "无效的用户名或密码!";
         } else if (exception instanceof UsernameNotFoundException) {
             error = "用户不存在";
         } else if (exception instanceof LockedException) {
             error = "用户被锁定";
         } else {
-            error = "系统发生错误!";
+            error = "未知错误!";
         }
 
         return error;

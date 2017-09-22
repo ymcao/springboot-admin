@@ -48,12 +48,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //所有的访问都需要权限验证
         http.authorizeRequests().anyRequest().authenticated();
         http.formLogin()
-                .failureUrl("/admin/login?error=true")
-                .successHandler(new AuthenticationSuccessHandler())
-                //访问成功页url
-                .defaultSuccessUrl("/admin/index")
-                //默认访问页
                 .loginPage("/admin/login")
+                .defaultSuccessUrl("/admin/index")
+                .failureUrl("/admin/login?error=true")
+                .permitAll()
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -64,7 +62,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
         //关闭csrf 防止循环定向
         http.csrf().disable();
-        http.exceptionHandling().authenticationEntryPoint(new MyAuthenticationEntryPoint()).accessDeniedHandler(new MyAccessDeniedHandler());
+        http.exceptionHandling()
+                .accessDeniedHandler(new MyAccessDeniedHandler());
     }
 
     @Override
@@ -88,40 +87,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(4);
     }
-
-
-
-    private class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
-        @Override
-        public void commence(HttpServletRequest request,
-                             HttpServletResponse response,
-                             AuthenticationException authException) throws IOException {
-            response.setCharacterEncoding("utf-8");
-            if (isAjax(request)) {
-                response.getWriter().println("请登录");
-            } else {
-                response.sendRedirect("/admin/login");
-            }
-
-        }
-    }
-
-
-    private class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-
-        @Override
-        public void onAuthenticationSuccess(HttpServletRequest request,
-                                            HttpServletResponse response, Authentication authentication)
-                throws ServletException, IOException {
-
-            clearAuthenticationAttributes(request);
-            if (!isAjax(request)) {
-                super.onAuthenticationSuccess(request, response, authentication);
-            }
-        }
-    }
-
 
 
     private class MyAccessDeniedHandler implements AccessDeniedHandler {

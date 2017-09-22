@@ -3,9 +3,9 @@ package com.mobile2016.common.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LoggerUtil {
+public class LogUtil {
 
-    private static Logger logger= LoggerFactory.getLogger(LoggerUtil.class);
+    private static Logger logger= LoggerFactory.getLogger(LogUtil.class);
 
     public  static  void I(String msg){
         logger.info(msg);

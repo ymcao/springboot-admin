@@ -13,24 +13,41 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
-
-
 @Controller
 public class AdminController {
-
 
 	@Autowired
 	private UserService userService;
 
 
 	@GetMapping("/admin/index")
-	public String index(Model model) {
-		return "index_0_0_0";
+	public String index(HttpSession session) {
+
+		try {
+			Authentication auth = SecurityContextHolder.getContext()
+					.getAuthentication();
+
+			if (auth instanceof AnonymousAuthenticationToken) {
+				return "login";
+			} else {
+				Object  pinciba=auth.getPrincipal();
+				if(pinciba instanceof  UserDetails){
+					UserDetails userDetail = ((UserDetails) pinciba);
+					session.setAttribute("username", userDetail.getUsername());
+					//model.addAttribute("username", userDetail.getUsername());
+				}
+
+				return "redirect:index_0_0_0";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "login";
+		}
+
 	}
 
 	/**
@@ -63,6 +80,8 @@ public class AdminController {
 						user.setRole("普通用户");
 					}else if(user.getRole().equals("ROLE_ADMIN")){
 						user.setRole("管理员");
+					}else if(user.getRole().equals("ROLE_SUPER")){
+						user.setRole("超级管理员");
 					}
 				}
 			}
@@ -86,42 +105,24 @@ public class AdminController {
 	@GetMapping(value={"/admin/login","/"})
 	public String loginGet(Model model,
 						   @RequestParam(value = "error", required = false) String error,
-						   HttpServletRequest request, HttpSession session) {
-
+						   HttpServletRequest request) {
 
 
 		if (error != null) {
 			model.addAttribute("error",
 					ErrorUtil.getErrorMessage(request, "SPRING_SECURITY_LAST_EXCEPTION"));
 		}
-		try {
-			Authentication auth = SecurityContextHolder.getContext()
-					.getAuthentication();
-
-			if (auth instanceof AnonymousAuthenticationToken) {
-				return  "login";
-			} else {
-				Object  pinciba=auth.getPrincipal();
-				if(pinciba instanceof  UserDetails){
-					UserDetails userDetail = ((UserDetails) pinciba);
-					session.setAttribute("username", userDetail.getUsername());
-					//model.addAttribute("username", userDetail.getUsername());
-				}
-				return  "index";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return  "login";
-		}
+		return "login";
 
 	}
-
 
 
 	@GetMapping("/admin/create")
-	public String getUser(Model model) {
+	@PreAuthorize("hasAnyRole('SUPER')")
+	public String getUser() {
 		return "create";
 	}
+
 
 	/**
 	 * 创建用户
@@ -143,10 +144,8 @@ public class AdminController {
 	}
 
 
-
-
 	@GetMapping("/admin/403")
-	public String accessDeny(Model model) {
+	public String accessDeny() {
 		return "403";
 	}
 

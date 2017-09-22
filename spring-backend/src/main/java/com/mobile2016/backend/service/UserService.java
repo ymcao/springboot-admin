@@ -38,7 +38,10 @@ public class UserService implements UserDetailsService {
 
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (user.getRole().equals("admin")) {
+
+        if (user.getRole().equals("super")) {
+            user.setRole("ROLE_SUPER");
+        } else if (user.getRole().equals("admin")) {
             user.setRole("ROLE_ADMIN");
         } else if(user.getRole().equals("user")){
             user.setRole("ROLE_USER");

@@ -24,8 +24,8 @@ public class WebAnthencationProder implements AuthenticationProvider {
         String username = authentication.getName();
         String password = (String) authentication.getCredentials();
 
-        //LoggerUtil.W("用户名："+username);
-        //LoggerUtil.W("密码："+password);
+        //LogUtil.W("用户名："+username);
+        //LogUtil.W("密码："+password);
 
         User user =userService.getUserByname(username);
         if(user == null){
