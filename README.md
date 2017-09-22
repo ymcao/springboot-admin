@@ -27,6 +27,9 @@ dependencies {
 }
 
 ```
+运行截图 
+
+![](https://raw.githubusercontent.com/ymcao/springboot-admin/master/screenshot/admin_screenshot.png)
 
 
 
