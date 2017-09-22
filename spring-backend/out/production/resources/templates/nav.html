@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+<meta charset="UTF-8"/>
+<title>Insert title here</title>
+</head>
+<body>
+	<nav class="navbar-default navbar-static-side" role="navigation" th:fragment="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> 
+                    	<span>
+                            <img alt="image" class="img-circle" th:src="@{/img/profile_small.jpg}" />
+						</span>
+                    	<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> 
+                            	<span class="block m-t-xs">
+                            		<a class="font-bold" th:text="${session.username}"></a>
+
+                             	</span> 
+                             </span>
+                     	</a>
+                    </div>
+                    <div class="logo-element">
+                         Hendry
+                    </div>
+                </li>
+
+                <li >
+                    <a href="#">
+                        <i class="fa fa-desktop">
+
+                        </i>
+                        <span class="nav-label">用户管理</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level collapse">
+                        <li ><a  th:href="@{/admin/create}">创建用户</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+</body>
+</html>
+
+
+

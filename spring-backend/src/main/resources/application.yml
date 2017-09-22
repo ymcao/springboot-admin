@@ -1,0 +1,37 @@
+server:
+  port: 8090
+  tomcat.max-threads: 0
+  tomcat.uri-encoding: UTF-8
+
+spring:
+  thymeleaf:
+    cache: false
+    mode: HTML5
+    content-type: text/html
+    encoding: UTF-8
+
+  datasource:
+    url : jdbc:mysql://127.0.0.1:3306/mobile_2016?useUnicode=true&characterEncoding=UTF-8
+    username : root
+    password : 123456
+    driverClassName : com.mysql.jdbc.Driver
+    maximumPoolSize : 25
+    minimumIdle : 3
+    idleTimeout : 30000
+    pool-prepared-statements : true
+    max-open-prepared-statements : 250
+
+
+jwt:
+   header: Authorization
+   secret: mode2016
+   expiration: 604800
+
+logging:
+  config: classpath:logback-warn.xml
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+
+
+
