@@ -23,43 +23,6 @@
         	<div class="border-bottom" th:include="header :: headerTop"></div>
         	<div class="footer" th:include="footer :: copyright"></div>
 
-            <div class="ibox-content">
-                <div class="table-responsive">
-                    <table class=" table table-hover" data-page-size="10">
-                        <thead>
-                        <tr>
-                            <th width="8%">ID</th>
-                            <th width="20%">用户名 </th>
-                            <th width="24%">手机号</th>
-                            <th width="25%">创建日期</th>
-                            <th width="10%">角色</th>
-
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="user : ${userList}">
-                            <td th:text="${user.id}"></td>
-                            <td th:text="${user.username}"></td>
-                            <td th:text="${user.mobile}"></td>
-                            <td th:text="${user.addate}"></td>
-                            <td th:text="${user.role}"></td>
-                            <td>
-                                <a href="#"  title="删除"><i class="fa fa-trash-o text-navy"></i></a>
-                            </td>
-                        </tr>
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <td colspan="7">
-                                <ul id="pageHTML" class="pagination pull-right"></ul>
-                            </td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-
         </div>
     </div>
 
@@ -68,44 +31,7 @@
     <script th:src="@{/js/bootstrap.min.js}"></script>
     <script th:src="@{/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
     <script th:src="@{/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
-    <!-- Custom and plugin javascript -->
     <script th:src="@{/js/inspinia.js}"></script>
-    <!-- common -->
-    <script th:src="@{/js/common.js}"></script>
-
-    <script th:inline="javascript">
-        var pageHTML = [[${pageHTML}]];
-        $(document).ready(function () {
-            $("#pageHTML").html(pageHTML);
-        });
-
-        /*<![CDATA[*/
-        function updateState(id,state,commendState){
-            var deleteTag;
-            if(state==2){
-                deleteTag = confirm("确定删除此条信息?");
-            } else {
-                deleteTag = true;
-            }
-            if(deleteTag){
-                $.ajax({
-                    type: "POST",
-                    url: "",
-                    contentType: "application/json; charset=utf-8",
-                    success: function(msg){
-                        window.location.reload();
-                    },
-                    error: function(){
-                        alert("系统异常！");
-                    }
-                });
-            }
-        }
-        /*]]>*/
-    </script>
-
-
-
 
 </body>
 </html>

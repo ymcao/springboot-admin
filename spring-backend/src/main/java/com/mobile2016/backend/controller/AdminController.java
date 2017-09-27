@@ -1,8 +1,12 @@
 package com.mobile2016.backend.controller;
 
+import com.mobile2016.backend.model.AdminUser;
 import com.mobile2016.backend.model.User;
+import com.mobile2016.backend.service.UploadService;
 import com.mobile2016.backend.service.UserService;
 import com.mobile2016.common.utils.ErrorUtil;
+import com.mobile2016.common.utils.FileUtil;
+import com.mobile2016.common.utils.LoggerUtil;
 import com.mobile2016.common.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,8 +17,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -23,80 +32,8 @@ public class AdminController {
 	@Autowired
 	private UserService userService;
 
-
-	@GetMapping("/admin/index")
-	public String index(HttpSession session) {
-
-		try {
-			Authentication auth = SecurityContextHolder.getContext()
-					.getAuthentication();
-
-			if (auth instanceof AnonymousAuthenticationToken) {
-				return "login";
-			} else {
-				Object  pinciba=auth.getPrincipal();
-				if(pinciba instanceof  UserDetails){
-					UserDetails userDetail = ((UserDetails) pinciba);
-					session.setAttribute("username", userDetail.getUsername());
-					//model.addAttribute("username", userDetail.getUsername());
-				}
-
-				return "redirect:index_0_0_0";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "login";
-		}
-
-	}
-
-	/**
-	 * 获取角色列表
-	 * @return
-	 */
-	@GetMapping("/admin/index_{pageCurrent}_{pageSize}_{pageCount}")
-	@PreAuthorize("hasAnyRole('ADMIN')")
-	public String getUserList(User u,
-							  @PathVariable Integer pageCurrent,
-							  @PathVariable Integer pageSize,
-							  @PathVariable Integer pageCount,
-							  Model model) {
-		//判断
-		if(pageSize == 0) pageSize = 10;
-		if(pageCurrent == 0) pageCurrent = 1;
-		int rows = userService.count();
-		if(pageCount == 0) pageCount = rows%pageSize == 0 ? (rows/pageSize) : (rows/pageSize) + 1;
-
-		u.setStart((pageCurrent - 1)*pageSize);
-		u.setEnd(pageSize);
-		if(u.getOrderBy()==null){u.setOrderBy("ADDDATE DESC");}
-
-		List<User> userList;
-		try {
-			userList =userService.loadAllUsers(u);
-			if(userList!=null&&userList.size()>0){
-				for(User user:userList){
-					if(user.getRole().equals("ROLE_USER")){
-						user.setRole("普通用户");
-					}else if(user.getRole().equals("ROLE_ADMIN")){
-						user.setRole("管理员");
-					}else if(user.getRole().equals("ROLE_SUPER")){
-						user.setRole("超级管理员");
-					}
-				}
-			}
-
-			String pageHTML = PageUtil.getPageContent("index_{pageCurrent}_{pageSize}_{pageCount}"+"?orderBy="+u.getOrderBy(), pageCurrent, pageSize, pageCount);
-			model.addAttribute("pageHTML",pageHTML);
-			model.addAttribute("user",u);
-			model.addAttribute("userList",userList);
-
-		} catch (Exception e) {
-
-		}
-		return "index";
-	}
-
+	@Autowired
+	private UploadService uploadService;
 
 	/**
 	 * @param model
@@ -117,30 +54,169 @@ public class AdminController {
 	}
 
 
-	@GetMapping("/admin/create")
-	@PreAuthorize("hasAnyRole('SUPER')")
-	public String getUser() {
-		return "create";
+	@GetMapping("/admin/index")
+	public String index(HttpSession session) {
+
+		try {
+			Authentication auth = SecurityContextHolder.getContext()
+					.getAuthentication();
+
+			if (auth instanceof AnonymousAuthenticationToken) {
+				return "login";
+			} else {
+				Object  pinciba=auth.getPrincipal();
+				if(pinciba instanceof  UserDetails){
+					UserDetails userDetail = ((UserDetails) pinciba);
+					session.setAttribute("username", userDetail.getUsername());
+					//model.addAttribute("username", userDetail.getUsername());
+				}
+
+				return "index";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "login";
+		}
+
+	}
+
+	/**
+	 * 获取注册用户列表
+	 * @return
+	 */
+	@GetMapping("/admin/user_{pageCurrent}_{pageSize}_{pageCount}")
+	@PreAuthorize("hasAnyRole('ADMIN','SUPER')")
+	public String usersList(User u,
+							  @PathVariable Integer pageCurrent,
+							  @PathVariable Integer pageSize,
+							  @PathVariable Integer pageCount,
+							  Model model) {
+		//判断
+		if(pageSize == 0) pageSize = 10;
+		if(pageCurrent == 0) pageCurrent = 1;
+		int rows = userService.count();
+		if(pageCount == 0) pageCount = rows%pageSize == 0 ? (rows/pageSize) : (rows/pageSize) + 1;
+
+		u.setStart((pageCurrent - 1)*pageSize);
+		u.setEnd(pageSize);
+		if(u.getOrderBy()==null){u.setOrderBy("ADDDATE DESC");}
+
+		List<User> userList;
+		try {
+			userList =userService.loadAllUsers(u);
+			String pageHTML = PageUtil.getPageContent("user_{pageCurrent}_{pageSize}_{pageCount}?username="+u.getUsername()+"&orderBy="+u.getOrderBy(), pageCurrent, pageSize, pageCount);
+			model.addAttribute("pageHTML",pageHTML);
+			model.addAttribute("user",u);
+			model.addAttribute("userList",userList);
+
+		} catch (Exception e) {
+
+		}
+		return "user_list";
 	}
 
 
+
+
+	@GetMapping("/admin/adminUserCreate")
+	@PreAuthorize("hasAnyRole('SUPER')")
+	public String addAdminUser() {
+		return "adminuser_create";
+	}
+
+
+
 	/**
-	 * 创建用户
+	 * 创建管理用户
 	 * @param user
 	 * @return
 	 */
-	@PostMapping(value = "/admin/create")
-	public String postUser( Model model,User user){
-
+	@PostMapping(value = "/admin/adminUserCreate")
+	public String addAdminUser(Model model, AdminUser user){
 		try{
-			userService.save(user);
+
+			userService.insertAdminUser(user);
 			model.addAttribute("result", "添加成功！");
-			return "create";
+
+			return "user_create";
 		}catch (Exception e){
 			model.addAttribute("result", "添加失败！");
-			return "create";
+			return "user_create";
 		}
 
+
+	}
+
+
+	///////////////////////////////////////////////////////
+
+	@GetMapping("/admin/updateUser")
+	@PreAuthorize("hasAnyRole('SUPER')")
+	public String updateUser(Model model,User user) {
+
+
+		if(user!=null&&user.getId()!=0){
+			User u= userService.findUserById(user);
+			model.addAttribute("user",u);
+		}
+
+		return "user_update";
+	}
+
+
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	@PostMapping(value = "/admin/updateUser")
+	public String updateUser(@RequestParam MultipartFile[] imageFile, User user){
+
+			if(imageFile.length>0) {
+				for (MultipartFile file : imageFile) {
+					if (file.isEmpty()) {
+						LoggerUtil.W("无文件上传");
+					} else {
+						try {
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+							Date date = new java.util.Date();
+							String strDate = sdf.format(date);
+
+							String fileName = strDate + file.getOriginalFilename().substring(
+									file.getOriginalFilename().indexOf("."),
+									file.getOriginalFilename().length());
+
+							if(file.getInputStream()!=null) {
+
+								byte[] byteArray = FileUtil.InputStreamTOByte(file.getInputStream());
+								uploadService.uploadFile(fileName, byteArray,user);
+
+							}
+
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+					}
+				}
+			}
+
+		    userService.updateUser(user);
+			return "redirect:user_0_0_0";
+	}
+
+	@PostMapping(value = "/admin/userDel")
+	@PreAuthorize("hasAnyRole('SUPER')")
+	public String  deluser(Model model,User  u){
+
+		try{
+			userService.delUserById(u);
+			//model.addAttribute("result","删除成功");
+			return "index";
+		}catch (Exception e){
+			//model.addAttribute("result","删除失败");
+			return "index";
+		}
 	}
 
 

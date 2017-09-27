@@ -1,18 +1,17 @@
 package com.mobile2016.backend.model;
 
-
 import java.sql.Date;
 
-public class User extends TModel{
+public class User  extends TModel{
 
     private Integer id;
     private String username;
     private String password;
-    private String role;
-    private String mobile;
-    private Integer state;
+    private String email;
+    private String enabled;
     private String  avatar;
-    private Date addate;
+    private Date registerDate;
+    private String phone;
 
     public Integer getId() {
         return id;
@@ -38,29 +37,20 @@ public class User extends TModel{
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public String getEmail() {
+        return email;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-
-    public String getMobile() {
-        return mobile;
+    public String getEnabled() {
+        return enabled;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
+    public void setEnabled(String enabled) {
+        this.enabled = enabled;
     }
 
     public String getAvatar() {
@@ -71,11 +61,19 @@ public class User extends TModel{
         this.avatar = avatar;
     }
 
-    public Date getAddate() {
-        return addate;
+    public Date getRegisterDate() {
+        return registerDate;
     }
 
-    public void setAddate(Date addate) {
-        this.addate = addate;
+    public void setRegisterDate(Date registerDate) {
+        this.registerDate = registerDate;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

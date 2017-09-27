@@ -1,6 +1,6 @@
 package com.mobile2016.common.security;
 
-import com.mobile2016.backend.model.User;
+import com.mobile2016.backend.model.AdminUser;
 import com.mobile2016.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -24,10 +24,10 @@ public class WebAnthencationProder implements AuthenticationProvider {
         String username = authentication.getName();
         String password = (String) authentication.getCredentials();
 
-        //LogUtil.W("用户名："+username);
-        //LogUtil.W("密码："+password);
+        //LoggerUtil.W("用户名："+username);
+        //LoggerUtil.W("密码："+password);
 
-        User user =userService.getUserByname(username);
+        AdminUser user =userService.getAdminUserByname(username);
         if(user == null){
             throw new BadCredentialsException("Username not found.");
         }

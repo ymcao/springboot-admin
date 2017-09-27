@@ -1,5 +1,6 @@
 package com.mobile2016.backend.service;
 
+import com.mobile2016.backend.model.AdminUser;
 import com.mobile2016.backend.model.User;
 import com.mobile2016.backend.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,24 @@ public class UserService implements UserDetailsService {
     public Integer count(){
         return userMapper.count();
     }
+
+    public void delUserById(User user){
+        userMapper.delUserById(user);
+    }
+
+    public  User findUserById(User user) {
+        return userMapper.findUserById(user);
+    }
+
+
+    public  void updateUser(User user){
+        userMapper.updateUser(user);
+    }
+
     /**
-     * 保存用户
-     *
      * @param user
      */
-    public void save(User user) {
+    public long  insertAdminUser(AdminUser user) {
 
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -49,13 +62,13 @@ public class UserService implements UserDetailsService {
         user.setAddate(new java.sql.Date(new java.util.Date().getTime()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        userMapper.insert(user);
+       return  userMapper.insertAdminUser(user);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        User user = userMapper.findUserByName(username);
+        AdminUser user = userMapper.findAdminUserByName(username);
         if (user == null) {
             throw new UsernameNotFoundException(username + " not found");
         }
@@ -101,7 +114,7 @@ public class UserService implements UserDetailsService {
         };
     }
 
-    public User getUserByname(String username) {
-        return userMapper.findUserByName(username);
+    public AdminUser getAdminUserByname(String username) {
+        return userMapper.findAdminUserByName(username);
     }
 }

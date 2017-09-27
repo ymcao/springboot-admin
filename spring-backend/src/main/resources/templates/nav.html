@@ -30,14 +30,24 @@
 
                 <li >
                     <a href="#">
-                        <i class="fa fa-desktop">
-
-                        </i>
+                        <i class="fa fa-desktop"></i>
                         <span class="nav-label">用户管理</span>
-                        <span class="fa arrow"></span>
-                    </a>
+                        <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li ><a  th:href="@{/admin/create}">创建用户</a></li>
+                        <li ><a th:href="@{/admin/user_0_0_0}">用户列表</a></li>
+                    </ul>
+                </li>
+
+                <li >
+                    <a href="#">
+                        <i class="fa fa-desktop"></i>
+                        <span class="nav-label">内容管理</span>
+                        <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+
+                        <li ><a th:href="@{/article/category_0_0_0}">分类管理</a></li>
+                        <li ><a th:href="@{/article/article_0_0_0}">文章管理</a></li>
+
                     </ul>
                 </li>
 
