@@ -57,7 +57,7 @@
 		                    	<form action="user_0_0_0">
 		                        <div class="row">
 	                            	<div class="col-sm-6 m-b-xs">
-	                            		<input  name="username" placeholder="用户名" class="form-control" type="text" th:value="${user.username}"/>
+	                            		<input  name="mobile" placeholder="手机号" class="form-control" type="text" th:value="${user.mobile}"/>
 	                                </div>
 	                                <div class="col-sm-3 m-b-xs">
 	                                    <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-search"></i>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -66,14 +66,21 @@
 	                            </div>
 	                             </form>
 	                            <div class="row">
-		                            <div class="col-sm-6 m-b-xs">
-					                    <a th:href="@{/admin/userCreate}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="" data-original-title="Refresh inbox">
+
+									<div class="col-sm-3 m-b-xs">
+										<a th:href="@{/admin/userCreate}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="" data-original-title="Refresh inbox">
+											<i class="fa fa-plus">
+
+											</i>&nbsp;&nbsp;&nbsp;&nbsp;添加用户&nbsp;&nbsp;&nbsp;&nbsp;</a>
+									</div>
+
+		                            <div class="col-sm-3 m-b-xs">
+					                    <a th:href="@{/admin/adminUserCreate}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="" data-original-title="Refresh inbox">
 											<i class="fa fa-plus">
 
 										</i>&nbsp;&nbsp;&nbsp;&nbsp;添加管理员&nbsp;&nbsp;&nbsp;&nbsp;</a>
 					                </div>
-					                <div class="col-sm-6 m-b-xs">
-	                             	</div>
+
 					       		</div>
 		                  
 		                   </div>
@@ -95,8 +102,8 @@
 										<thead>
 										<tr>
 											<th width="8%">ID</th>
-											<th width="20%">用户名 </th>
-											<th width="20%">手机号</th>
+											<th width="20%">手机号 </th>
+											<th width="20%">用户昵称</th>
 											<th width="25%">邮箱</th>
 											<th width="15%">创建日期</th>
 
@@ -104,15 +111,15 @@
 										</tr>
 										</thead>
 										<tbody>
-										<tr th:each="user : ${userList}">
+										<tr th:each="user : ${users}">
 											<td th:text="${user.id}"></td>
-											<td th:text="${user.username}"></td>
-											<td th:text="${user.phone}"></td>
+											<td th:text="${user.mobile}"></td>
+											<td th:text="${user.nickname}"></td>
 											<td th:text="${user.email}"></td>
 											<td th:text="${user.registerDate}"></td>
 
 											<td>
-												<a th:href="@{'updateUser?id='+${user.id}}" title="修改">
+												<a th:href="@{'updateUser?mobile='+${user.mobile}}" title="修改">
 													<i class="fa fa-edit text-navy"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 												<a href="#" th:onclick="'javascript:updateState('+${user.id}+',2);'"  title="删除">
 													<i class="fa fa-trash-o text-navy"></i></a>

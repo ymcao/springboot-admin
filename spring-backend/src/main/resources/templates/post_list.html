@@ -6,7 +6,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>文章列表</title>
+<title>Post列表</title>
 
 <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
 <link th:href="@{/font-awesome/css/font-awesome.css}" rel="stylesheet" />
@@ -24,7 +24,7 @@
         	<div class="border-bottom" th:include="header :: headerTop"></div>
       		<div class="row wrapper border-bottom white-bg page-heading" th:fragment="headerNav">
 		   		<div class="col-lg-10">
-		     		<h2>文章管理</h2>
+		     		<h2>Post管理</h2>
 		          	<ol class="breadcrumb">
 			            <li>
 			            	<a href="#">首页</a>
@@ -33,7 +33,7 @@
 			            	<a>内容管理</a>
 			         	</li>
 			          	<li class="active">
-			             	<strong>文章管理</strong>
+			             	<strong>Post管理</strong>
 			          	</li>
 					</ol>
 		      	</div>
@@ -54,20 +54,16 @@
 		                        </div>
 		                    </div>
 		                    <div class="ibox-content" style="display: block;">
-		                    	<form action="article_0_0_0">
+		                    	<form action="post_0_0_0">
 		                        <div class="row">
 	                            	<div class="col-sm-3 m-b-xs">
-	                            		<input id="title" name="title" placeholder="文章标题" class="form-control" type="text" th:value="${article.title}"/>
+	                            		<input id="title" name="title" placeholder="文章标题" class="form-control" type="text" th:value="${post.title}"/>
 	                                </div>
 	                                <div class="col-sm-3 m-b-xs">
-	                                    <select name="orderBy" id="orderBy" class="form-control">
-	                                    	<option value="ADDDATE DESC" th:selected="${article.orderBy=='ADDDATE DESC'}">时间倒序</option>
-	                                    	<option value="SCORE DESC" th:selected="${article.orderBy=='SCORE DESC'}">综合热度</option>
-	                                    	<option value="COMMENTS DESC" th:selected="${article.orderBy=='COMMENTS DESC'}">评论数</option>
-	                                    	<option value="BROWSES DESC" th:selected="${article.orderBy=='BROWSES DESC'}">浏览数</option>
-	                                    	<option value="LIKES DESC" th:selected="${article.orderBy=='LIKES DESC'}">点赞数</option>
-	                                    	<option value="ADDDATE ASC" th:selected="${article.orderBy=='ADDDATE ASC'}">时间正序</option>
-                                        </select>
+										<select name="target" id="target" class="form-control" >
+											<option value="0" th:selected="${post.target==0}">--请选择分类--</option>
+											<option th:each="target : ${post_targets}" th:value="${target.id}" th:text="${target.name}" th:selected="${target.id==post.target}">分类</option>
+										</select>
 	                                </div>
 	                                <div class="col-sm-2 m-b-xs">
 	                                    <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-search"></i>&nbsp;&nbsp;&nbsp;&nbsp;<strong>搜索</strong></button>
@@ -76,7 +72,9 @@
 	                             </form>
 	                            <div class="row">
 		                            <div class="col-sm-6 m-b-xs">
-					                    <a th:href="@{/article/articleUpdate}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="" data-original-title="Refresh inbox"><i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;新增文章&nbsp;&nbsp;&nbsp;&nbsp;</a>
+					                    <a th:href="@{/postUpdate}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="" data-original-title="Refresh inbox"><i class="fa fa-plus">
+
+										</i>&nbsp;&nbsp;&nbsp;&nbsp;添加POST&nbsp;&nbsp;&nbsp;&nbsp;</a>
 					                </div>
 					                <div class="col-sm-6 m-b-xs">
 	                             	</div>
@@ -88,7 +86,7 @@
                 	<div class="col-lg-12">
 	                    <div class="ibox float-e-margins">
 	                        <div class="ibox-title">
-	                            <h5>文章列表</h5>
+	                            <h5>POST列表</h5>
 	                            <div class="ibox-tools">
 	                                <a class="collapse-link">
 	                                    <i class="fa fa-chevron-up"></i>
@@ -113,28 +111,28 @@
 		                                    </tr>
 	                                    </thead>
 	                                    <tbody>
-	                                    	<tr th:each="art : ${articles}">
+	                                    	<tr th:each="post : ${posts}">
 
-										   		<td th:text="${art.id}">Onions</td>
-										      	<td th:text="${art.title}">Onions</td>
-										      	<td th:text="${art.categoryName}">Onions</td>
-										      	<td th:text="${art.addDate}">Onions</td>
+										   		<td th:text="${post.id}">Onions</td>
+										      	<td th:text="${post.title}">Onions</td>
+										      	<td th:text="${post.targetName}">Onions</td>
+										      	<td th:text="${post.addDate}">Onions</td>
 
-												<td th:text="${art.browses}">Onions</td>
-												<td th:text="${art.comments}">Onions</td>
-												<td th:text="${art.likes}">Onions</td>
+												<td th:text="${post.browses}">Onions</td>
+												<td th:text="${post.comments}">Onions</td>
+												<td th:text="${post.likes}">Onions</td>
 
 										      	<td>
-													<a th:onclick="'javascript:updateState('+${art.id}+',1);'"
-													   th:if="${art.state} == 0">发布</a>
+													<a th:onclick="'javascript:updateState('+${post.id}+',1);'"
+													   th:if="${post.enabled} == 0">发布</a>
 
-													<a th:onclick="'javascript:updateState('+${art.id}+',0);'"
-													   th:if="${art.state }== 1">取消</a>
+													<a th:onclick="'javascript:updateState('+${post.id}+',0);'"
+													   th:if="${post.enabled }== 1">取消</a>
 										      	</td>
 										      	<td>
-										      		<a th:href="@{'articleUpdate?id='+${art.id}}" title="预览/修改">
+										      		<a th:href="@{'postUpdate?id='+${post.id}}" title="预览/修改">
 														<i class="fa fa-edit text-navy"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-										      		<a href="#" th:onclick="'javascript:updateState('+${art.id}+',0);'" title="删除">
+										      		<a href="#" th:onclick="'javascript:updateState('+${post.id}+',2);'" title="删除">
 														<i class="fa fa-trash-o text-navy"></i></a>
 										      	</td>
 											</tr>
@@ -191,7 +189,7 @@
 			if(deleteTag){
 		 		$.ajax({
 		      		type: "POST",
-		           	url: "articleDel?id="+id+"&state="+state,
+		           	url: "postDel?id="+id,
 		           	contentType: "application/json; charset=utf-8",
 		        	success: function(msg){
 		        		 window.location.reload();

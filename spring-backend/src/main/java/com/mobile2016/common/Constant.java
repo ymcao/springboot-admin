@@ -1,4 +1,4 @@
-package com.mobile2016.backend.model;
+package com.mobile2016.common;
 
 public class Constant {
    public  static final String OrderByAddDateDesc = "ADDDATE DESC";

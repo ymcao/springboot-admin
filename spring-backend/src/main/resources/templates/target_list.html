@@ -50,7 +50,7 @@
 		                        </div>
 		                    </div>
 		                    <div class="ibox-content" style="display: block;">
-		                    	<form action="category_0_0_0">
+		                    	<form action="target_0_0_0">
 			                        <div class="row">
 		                            	<div class="col-sm-6 m-b-xs">
 		                            		<input name="name"  placeholder="分类名称" class="form-control" type="text"/>
@@ -62,7 +62,7 @@
 	                            </form>
 	                            <div class="row">
 		                            <div class="col-sm-6 m-b-xs">
-					                    <a th:href="@{/article/categoryUpdate}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="" data-original-title="Refresh inbox"><i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;新增分类&nbsp;&nbsp;&nbsp;&nbsp;</a>
+					                    <a th:href="@{/target/targetUpdate}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="" data-original-title="Refresh inbox"><i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;新增分类&nbsp;&nbsp;&nbsp;&nbsp;</a>
 					                </div>
 					                <div class="col-sm-6 m-b-xs"></div>
 					            </div>
@@ -87,21 +87,19 @@
 		                                    <tr>
 		                                    	<th width="5%">ID</th>
 		                                        <th width="30%">名称 </th>
-		                                        <th width="40%">描述 </th>
-		                                        <th width="10%">添加时间</th>
+		                                        <th width="30%">添加时间</th>
 		                                        <th>操作</th>
 		                                    </tr>
 	                                    </thead>
 	                                    <tbody>
-	                                   		<tr th:each="category : ${list}">
-										   		<td th:text="${category.id}">Onions</td>
-										      	<td th:text="${category.name}">Onions</td>
-										      	<td th:text="${category.description}">Onions</td>
-										      	<td th:text="${category.adddate}">Onions</td>
+	                                   		<tr th:each="target : ${targets}">
+										   		<td th:text="${target.id}">Onions</td>
+										      	<td th:text="${target.name}">Onions</td>
+										      	<td th:text="${target.addDate}">Onions</td>
 										      	<td>
-										      		<a th:href="@{'categoryUpdate?id='+${category.id}}" title="修改"><i class="fa fa-edit text-navy"></i></a>
+										      		<a th:href="@{'targetUpdate?id='+${target.id}}" title="修改"><i class="fa fa-edit text-navy"></i></a>
 										      		&nbsp;&nbsp;&nbsp;&nbsp;
-										      		<a href="#" th:onclick="'javascript:updateState('+${category.id}+',2);'" title="删除"><i class="fa fa-trash-o text-navy"></i></a>
+										      		<a href="#" th:onclick="'javascript:updateState('+${target.id}+',2);'" title="删除"><i class="fa fa-trash-o text-navy"></i></a>
 										      	</td>
 											</tr>
 	                                    </tbody>
@@ -158,7 +156,7 @@
 			if(confirm("确定删除此条信息?")){
 		 		$.ajax({
 		      		type: "POST",
-		           	url: "categoryDel?id="+id+"&state="+state,
+		           	url: "targetDel?id="+id,
 		           	contentType: "application/json; charset=utf-8",
 		        	success: function(msg){
 		        		 window.location.reload();

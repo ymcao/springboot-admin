@@ -35,6 +35,10 @@ public class AdminController {
 	@Autowired
 	private UploadService uploadService;
 
+
+
+	//-------->管理员用户操作<-----------
+
 	/**
 	 * @param model
 	 * @return
@@ -80,6 +84,39 @@ public class AdminController {
 
 	}
 
+
+
+	@GetMapping("/admin/adminUserCreate")
+	@PreAuthorize("hasAnyRole('SUPER')")
+	public String addAdminUser() {
+		return "adminuser_create";
+	}
+
+
+	/**
+	 * 创建管理用户
+	 * @param user
+	 * @return
+	 */
+	@PostMapping(value = "/admin/adminUserCreate")
+	public String addAdminUser(Model model, AdminUser user){
+		try{
+
+			userService.insertAdminUser(user);
+			model.addAttribute("result", "添加成功！");
+
+			return "adminuser_create";
+		}catch (Exception e){
+			model.addAttribute("result", "添加失败！");
+			return "adminuser_create";
+		}
+
+
+	}
+
+
+	//-------------->普通用户操作<-----------
+
 	/**
 	 * 获取注册用户列表
 	 * @return
@@ -96,18 +133,22 @@ public class AdminController {
 		if(pageCurrent == 0) pageCurrent = 1;
 		int rows = userService.count();
 		if(pageCount == 0) pageCount = rows%pageSize == 0 ? (rows/pageSize) : (rows/pageSize) + 1;
-
+        //u.setSize(rows);
 		u.setStart((pageCurrent - 1)*pageSize);
 		u.setEnd(pageSize);
 		if(u.getOrderBy()==null){u.setOrderBy("ADDDATE DESC");}
 
+		u.setPageCurrent(pageCurrent);
+		u.setPageSize(pageSize);
+		u.setPageCount(pageCount);
+
 		List<User> userList;
 		try {
 			userList =userService.loadAllUsers(u);
-			String pageHTML = PageUtil.getPageContent("user_{pageCurrent}_{pageSize}_{pageCount}?username="+u.getUsername()+"&orderBy="+u.getOrderBy(), pageCurrent, pageSize, pageCount);
+			String pageHTML = PageUtil.getPageContent("user_{pageCurrent}_{pageSize}_{pageCount}?mobile="+u.getMobile()+"&orderBy="+u.getOrderBy(), pageCurrent, pageSize, pageCount);
 			model.addAttribute("pageHTML",pageHTML);
 			model.addAttribute("user",u);
-			model.addAttribute("userList",userList);
+			model.addAttribute("users",userList);
 
 		} catch (Exception e) {
 
@@ -116,36 +157,39 @@ public class AdminController {
 	}
 
 
-
-
-	@GetMapping("/admin/adminUserCreate")
+	/**
+	 * 创建普通用户
+	 * @return
+	 */
+	@GetMapping("/admin/userCreate")
 	@PreAuthorize("hasAnyRole('SUPER')")
-	public String addAdminUser() {
-		return "adminuser_create";
+	public String addUser() {
+		return "user_create";
 	}
 
 
-
-	/**
-	 * 创建管理用户
-	 * @param user
-	 * @return
-	 */
-	@PostMapping(value = "/admin/adminUserCreate")
-	public String addAdminUser(Model model, AdminUser user){
+	@PostMapping(value = "/admin/userCreate")
+	public String addUser(Model model, User user){
 		try{
+			User u=userService.findUserByMobile(user);
+			if(u!=null){
+				model.addAttribute("result", "手机号已存在！");
+				return "user_create";
+			}else{
+				model.addAttribute("result", "用户添加成功！");
+				userService.insertUser(user);
+				return "user_create";
+			}
 
-			userService.insertAdminUser(user);
-			model.addAttribute("result", "添加成功！");
-
-			return "user_create";
 		}catch (Exception e){
+			LoggerUtil.W(e.getMessage());
 			model.addAttribute("result", "添加失败！");
 			return "user_create";
 		}
 
 
 	}
+
 
 
 	///////////////////////////////////////////////////////
@@ -155,8 +199,8 @@ public class AdminController {
 	public String updateUser(Model model,User user) {
 
 
-		if(user!=null&&user.getId()!=0){
-			User u= userService.findUserById(user);
+		if(user!=null&&user.getMobile()!=null){
+			User u= userService.findUserByMobile(user);
 			model.addAttribute("user",u);
 		}
 
@@ -166,6 +210,7 @@ public class AdminController {
 
 
 	/**
+	 * 更新普通用户
 	 * @param user
 	 * @return
 	 */
@@ -205,17 +250,25 @@ public class AdminController {
 			return "redirect:user_0_0_0";
 	}
 
+	/**
+	 * 删除普通该用户
+	 * @param model
+	 * @param u
+	 * @return
+	 */
+
 	@PostMapping(value = "/admin/userDel")
 	@PreAuthorize("hasAnyRole('SUPER')")
 	public String  deluser(Model model,User  u){
 
 		try{
+			u.setEnabled("2");
 			userService.delUserById(u);
 			//model.addAttribute("result","删除成功");
-			return "index";
+			return "redirect:user_0_0_0";
 		}catch (Exception e){
 			//model.addAttribute("result","删除失败");
-			return "index";
+			return "redirect:user_0_0_0";
 		}
 	}
 

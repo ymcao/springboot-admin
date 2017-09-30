@@ -31,13 +31,12 @@ dependencies {
     runtime('mysql:mysql-connector-java')
     compile("org.springframework.boot:spring-boot-starter-web")
     //compile ("org.springframework.boot:spring-boot-starter-data-rest")
-    //compile "com.alibaba:druid:1.0.26"
+    compile "com.alibaba:druid:1.0.26"
     compile "org.aspectj:aspectjweaver:1.5.4"
     compile "org.mybatis.spring.boot:mybatis-spring-boot-starter:1.1.1"
     compile ("org.springframework.boot:spring-boot-starter-data-redis")
     compile ("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile ("org.springframework.boot:spring-boot-starter-security")
-
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
     compile 'org.springframework.mobile:spring-mobile-device:1.1.5.RELEASE'
     compile 'javax.servlet:javax.servlet-api:3.1.0'

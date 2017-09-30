@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mobile2016.backend.mapper.UserMapper">
+
+    <!-- 开启基于redis的二级缓存
+    <cache type="com.mobile2016.common.cache.RedisCache"
+           eviction="LRU"
+           flushInterval="6000000"
+           size="1024"
+           readOnly="false"
+    />-->
+
+
+    <select id="total"  resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM user WHERE  enabled =1
+        <if test="mobile != null">
+            AND mobile LIKE CONCAT('%',#{mobile},'%')
+        </if>
+
+    </select>
+
+
+    <select id="select"
+            parameterType="com.mobile2016.backend.model.User"
+            resultType="com.mobile2016.backend.model.User">
+        SELECT * FROM user WHERE mobile = #{mobile} LIMIT 1
+    </select>
+
+
+    <select id="selectAll"
+            useCache="false"
+            parameterType="com.mobile2016.backend.model.User"
+            resultType="com.mobile2016.backend.model.User">
+
+        SELECT * FROM user WHERE  enabled =1
+        <if test="mobile != null">
+            AND mobile LIKE CONCAT('%',#{mobile},'%')
+        </if>
+
+        LIMIT #{start},#{end}
+
+    </select>
+
+
+    <update id="update" parameterType="com.mobile2016.backend.model.User" flushCache="true">
+         UPDATE  user set username = #{username},password = #{password},avatar=#{avatar}
+         where mobile=#{mobile} LIMIT 1
+    </update>
+
+</mapper>

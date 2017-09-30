@@ -1,6 +1,6 @@
 package com.mobile2016.backend.service;
 import com.mobile2016.backend.model.User;
-import com.mobile2016.backend.service.mapper.UserMapper;
+import com.mobile2016.backend.mapper.UserMapper;
 import com.mobile2016.common.utils.LoggerUtil;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
@@ -8,6 +8,7 @@ import com.qcloud.cos.request.UploadFileRequest;
 import com.qcloud.cos.sign.Credentials;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +30,14 @@ public class UploadService {
     private COSClient cosClient = new COSClient(clientConfig, cred);
 
 
+
+    @CachePut(key="'UserId'+#p0.id")
+    public  User updatehead(User user){
+        userMapper.updateUser(user);
+        return   userMapper.findUserByMobile(user);
+
+    }
+
     public  void uploadFile(String fileName,byte[] bytes,User user){
 
         clientConfig.setRegion("sh");
@@ -49,7 +58,7 @@ public class UploadService {
 
                 if(code==0){
                     user.setAvatar(IMAG_BASE_URL+fileName);
-                    userMapper.updateHead(user);
+                    updatehead(user);
                 }
 
         }

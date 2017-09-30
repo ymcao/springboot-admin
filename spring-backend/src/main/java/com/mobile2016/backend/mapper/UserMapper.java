@@ -1,4 +1,4 @@
-package com.mobile2016.backend.service.mapper;
+package com.mobile2016.backend.mapper;
 
 import com.mobile2016.backend.model.AdminUser;
 import com.mobile2016.backend.model.User;
@@ -13,30 +13,35 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
+    /////////////////////基础注解SQL
 
-    @Transactional
     @Insert("INSERT INTO admin_user(username,password,role,mobile,state,avatar,addate)" +
             "values(#{username},#{password},#{role},#{mobile},1,#{avatar},now())")
-    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    long insertAdminUser(AdminUser admin_user);
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    AdminUser insertAdminUser(AdminUser admin_user);
 
 
 
     @Select("SELECT * FROM admin_user where username=#{username}")
     AdminUser findAdminUserByName(@Param("username") String username);
 
+    //////////////////////////////////////
+
+    @Insert("INSERT INTO user(username,password,email,mobile,enabled,avatar,registerDate)" +
+            "values(#{username},#{password},#{email},#{mobile},1,#{avatar},now())")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    long insertUser(User user);
 
 
-
-    @Select("SELECT * FROM  user where id=#{id}")
-    User findUserById(User user);
+    @Select("SELECT * FROM  user where mobile=#{mobile}")
+    User findUserByMobile(User user);
 
     @Select({
             "<script>",
             "SELECT *  FROM  user ",
             "where enabled=1",
-            "<when test='username!=null'>",
-            "AND username LIKE CONCAT('%',#{username},'%')",
+            "<when test='mobile!=null'>",
+            "AND mobile LIKE CONCAT('%',#{mobile},'%')",
             "</when>",
             "limit #{start},#{end}",
             "</script>"
@@ -45,22 +50,20 @@ public interface UserMapper {
 
 
 
-    @Transactional
-    @Update("UPDATE  user set username=#{username},password=#{password},phone=#{phone} where id=#{id}")
+    @Update("UPDATE  user set username=#{username},password=#{password},mobile=#{mobile} where id=#{id}")
     long updateUser(User user);
 
 
-    @Transactional
     @Update("UPDATE  user set avatar=#{avatar} where id=#{id}")
     long updateHead(User user);
 
 
     @Select({
             "<script>",
-            "SELECT COUNT(*) FROM user ",
+            "SELECT COUNT(1) FROM user ",
             "WHERE enabled = 1 ",
-            "<when test='username!=null'>",
-            "AND username LIKE CONCAT('%',#{username},'%')",
+            "<when test='mobile!=null'>",
+            "AND mobile LIKE CONCAT('%',#{mobile},'%')",
             "</when>",
             "</script>"
     })

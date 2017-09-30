@@ -2,19 +2,20 @@ package com.mobile2016.backend.model;
 
 import java.sql.Date;
 
-public class Article extends TModel{
+public class Post extends TModel{
 
     private int id;
     private String title;
     private String description;
-    private int category;
-    private String categoryName;
-    private String categoryImage;
+    private int target;
+    private String targetName;
     private String content;
     private Date addDate;
     private Date updateDate;
-    private int commendState;
-    private int state;
+    //private int commendState;
+    private long longitude;
+    private long latitude;
+    private int enabled;
     private int browses;
     private int likes;
     private int comments;
@@ -43,14 +44,6 @@ public class Article extends TModel{
         this.description = description;
     }
 
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
     public String getContent() {
         return content;
     }
@@ -73,14 +66,6 @@ public class Article extends TModel{
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
     }
 
     public int getBrowses() {
@@ -107,28 +92,43 @@ public class Article extends TModel{
         this.comments = comments;
     }
 
-    public int getCommendState() {
-        return commendState;
+    public int getTarget() {
+        return target;
     }
 
-    public void setCommendState(int commendState) {
-        this.commendState = commendState;
+    public void setTarget(int target) {
+        this.target = target;
     }
 
-    public int getCategory() {
-        return category;
+    public String getTargetName() {
+        return targetName;
     }
 
-    public void setCategory(int category) {
-        this.category = category;
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
     }
 
-
-    public String getCategoryImage() {
-        return categoryImage;
+    public long getLongitude() {
+        return longitude;
     }
 
-    public void setCategoryImage(String categoryImage) {
-        this.categoryImage = categoryImage;
+    public void setLongitude(long longitude) {
+        this.longitude = longitude;
+    }
+
+    public long getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(long latitude) {
+        this.latitude = latitude;
+    }
+
+    public int getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(int enabled) {
+        this.enabled = enabled;
     }
 }

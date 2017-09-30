@@ -1,8 +1,11 @@
 package com.mobile2016.backend.model;
 
-public class TModel {
+import java.io.Serializable;
+
+public class TModel  implements Serializable{
     private int start;
     private int end;
+    private int size;
     private int pageCurrent;
     private int pageSize;
     private int pageCount;
@@ -53,5 +56,13 @@ public class TModel {
 
     public void setOrderBy(String orderBy) {
         this.orderBy = orderBy;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }
