@@ -1,9 +1,12 @@
 # spring-boot-admin
 ### 手把手一步步搭建Admin后台管理系统
 
-`1.spring-boot mybatis
- 2.spring-boot scurity权限认证
+
+
+`1.spring-boot
+ 2.spring-boot-scurity权限认证
  3.thymeleaf模板
+ 3.mybatis+druid实现读写分离
  4.后台管理系统，界面比较比较漂亮
 `
 
@@ -15,7 +18,7 @@ dependencies {
     runtime('mysql:mysql-connector-java')
     compile("org.springframework.boot:spring-boot-starter-web")
     //compile ("org.springframework.boot:spring-boot-starter-data-rest")
-    //compile "com.alibaba:druid:1.0.26"
+    compile "com.alibaba:druid:1.0.26"
     compile "org.aspectj:aspectjweaver:1.5.4"
     compile "org.mybatis.spring.boot:mybatis-spring-boot-starter:1.1.1"
     compile ("org.springframework.boot:spring-boot-starter-thymeleaf")
@@ -28,8 +31,7 @@ dependencies {
 
 ```
 运行截图 
-
 ![](https://raw.githubusercontent.com/ymcao/springboot-admin/master/screenshot/admin_screenshot.png)
-
-
+![](https://raw.githubusercontent.com/ymcao/springboot-admin/master/screenshot/admin_screenshot_1.png)
+![](https://raw.githubusercontent.com/ymcao/springboot-admin/master/screenshot/admin_screenshot_2.png)
 
